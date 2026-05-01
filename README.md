@@ -2,7 +2,7 @@
 
 A hackathon-ready “digital twin” demo for Baku: click a road, add a bus lane, and instantly see **Current** vs **Optimized** congestion on a map.
 
-## What you get
+## What you get 123
 - **Backend (FastAPI):** serves the road network and a `/simulate` endpoint (GNN-lite heuristic)
 - **Data (OSMnx):** one script to export a small Baku road network to GeoJSON
 - **Frontend (static + MapLibre GL JS):** no Node required; no map token required; open in browser via a simple HTTP server

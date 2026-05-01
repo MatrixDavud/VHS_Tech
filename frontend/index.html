@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Baku Digital Twin — Bus Lane Demo</title>
+
+    <link
+      href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
+      rel="stylesheet"
+    />
+    <link href="./styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div id="panel" class="panel">
+      <div class="panel-title">🚌 Baku Digital Twin</div>
+
+      <div class="row">
+        <div class="label">Simulation Mode</div>
+        <div class="buttons">
+          <div class="button-group">
+            <button id="modeCurrent" class="btn active" type="button">Current State</button>
+            <button id="modeOptimized" class="btn" type="button">Optimized State</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="label">Traffic Scenario</div>
+        <select id="timeOfDay" class="input-select">
+          <option value="6">🌅 Morning (6 AM)</option>
+          <option value="8">🚗 Rush Hour Morning (8 AM)</option>
+          <option value="12">☀️ Midday (12 PM)</option>
+          <option value="16">⛅ Afternoon (4 PM)</option>
+          <option value="18" selected>🚙 Rush Hour Evening (6 PM)</option>
+          <option value="22">🌙 Night (10 PM)</option>
+          <option value="2">🌃 Late Night (2 AM)</option>
+        </select>
+      </div>
+
+      <div class="row">
+        <div class="label">Population Density</div>
+        <input id="populationDensity" type="range" min="0" max="100" value="70" class="slider" />
+        <div class="slider-value" id="populationDensityValue">70%</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Parking Availability</div>
+        <input id="parkingAvailability" type="range" min="0" max="100" value="40" class="slider" />
+        <div class="slider-value" id="parkingAvailabilityValue">40%</div>
+      </div>
+
+      <div class="row">
+        <div class="label">Weather Conditions</div>
+        <select id="weatherCondition" class="input-select">
+          <option value="clear" selected>☀️ Clear</option>
+          <option value="rain">🌧️ Rain</option>
+          <option value="snow">❄️ Snow</option>
+        </select>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="label">Network Congestion</div>
+        <div class="value" id="score">80%</div>
+        <div class="subvalue">Average across all roads</div>
+      </div>
+
+      <div class="metrics" id="metrics">
+        <div class="metric-card">
+          <div class="metric-value" id="metricRoads">0</div>
+          <div class="metric-label">Roads Analyzed</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="metricTime">—</div>
+          <div class="metric-label">Avg Travel Time</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div class="label">Select Roads for Bus Lanes (Click on map)</div>
+        <div id="selectedRoadsList" class="roads-list"></div>
+      </div>
+
+      <button id="addBusLanes" class="btn primary" type="button" disabled>
+        ➕ Simulate Bus Lanes (0 roads)
+      </button>
+
+      <div id="impactMetrics" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06);">
+        <div class="label" style="margin-bottom: 12px">Impact Analysis</div>
+        <div class="metrics">
+          <div class="metric-card">
+            <div class="metric-value" id="impactImprovement">—</div>
+            <div class="metric-label">Congestion Reduced</div>
+          </div>
+          <div class="metric-card">
+            <div class="metric-value" id="impactTimeSaved">—</div>
+            <div class="metric-label">Time Saved</div>
+          </div>
+        </div>
+        <div id="recommendationsList" style="margin-top: 12px;"></div>
+      </div>
+
+      <div class="legend">
+        <div class="legend-title">Road Congestion Legend</div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #22c55e;"></div>
+          <span>Free flow (0-50%)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #f59e0b;"></div>
+          <span>Moderate (50-75%)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #ef4444;"></div>
+          <span>Heavy (75-100%)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background: #2563eb;"></div>
+          <span>Bus Lane (New)</span>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="row">
+        <div id="status" class="status">
+          Loading network data…
+        </div>
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>

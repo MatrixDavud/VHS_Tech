@@ -397,3 +397,154 @@ body {
     max-height: none;
   }
 }
+
+/* ── Save / Compare / Clear buttons ─────────────────────────────────────── */
+
+.btn.save {
+  width: 100%;
+  flex: none;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  color: white;
+  border: 2px solid transparent;
+  font-size: 13px;
+  padding: 10px 16px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.btn.save:hover:not(:disabled) {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6);
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn.compare {
+  width: 100%;
+  flex: none;
+  background: linear-gradient(135deg, #7c3aed, #5b21b6);
+  color: white;
+  border: 2px solid transparent;
+  font-size: 13px;
+  padding: 10px 16px;
+  margin-top: 8px;
+  font-weight: 600;
+}
+
+.btn.compare:hover:not(:disabled) {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.3);
+  transform: translateY(-1px);
+}
+
+.btn.clear {
+  width: 100%;
+  flex: none;
+  background: transparent;
+  color: #dc2626;
+  border: 2px solid #fecaca;
+  font-size: 12px;
+  padding: 8px 16px;
+  margin-top: 6px;
+  font-weight: 600;
+}
+
+.btn.clear:hover:not(:disabled) {
+  background: #fef2f2;
+  border-color: #dc2626;
+}
+
+/* ── Scenario comparison cards ───────────────────────────────────────────── */
+
+.scenario-card {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 10px;
+  transition: all 0.2s ease;
+}
+
+.scenario-card.best {
+  background: linear-gradient(135deg, #faf5ff, #ede9fe);
+  border-color: #7c3aed;
+  box-shadow: 0 4px 14px rgba(124, 58, 237, 0.15);
+}
+
+.scenario-card-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.scenario-rank {
+  font-size: 11px;
+  font-weight: 700;
+  color: #94a3b8;
+  background: #f1f5f9;
+  border-radius: 6px;
+  padding: 2px 6px;
+}
+
+.scenario-card.best .scenario-rank {
+  background: #7c3aed;
+  color: white;
+}
+
+.scenario-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #0f172a;
+  flex: 1;
+}
+
+.best-badge {
+  font-size: 11px;
+  font-weight: 700;
+  color: #7c3aed;
+  background: #ede9fe;
+  border-radius: 6px;
+  padding: 2px 8px;
+}
+
+.scenario-roads {
+  font-size: 11px;
+  color: #64748b;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.scenario-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 8px;
+}
+
+.scenario-metric {
+  background: white;
+  border-radius: 8px;
+  padding: 8px;
+  text-align: center;
+  border: 1px solid #e2e8f0;
+}
+
+.scenario-card.best .scenario-metric {
+  border-color: #ddd6fe;
+}
+
+.scenario-metric-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #7c3aed;
+}
+
+.scenario-card:not(.best) .scenario-metric-value {
+  color: #0369a1;
+}
+
+.scenario-metric-label {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-top: 2px;
+  font-weight: 500;
+}

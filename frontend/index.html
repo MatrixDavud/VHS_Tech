@@ -4,11 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <title>Baku Digital Twin — Bus Lane Demo</title>
-
-    <link
-      href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css"
-      rel="stylesheet"
-    />
+    <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet" />
     <link href="./styles.css" rel="stylesheet" />
   </head>
   <body>
@@ -17,6 +13,7 @@
     <div id="panel" class="panel">
       <div class="panel-title">🚌 Baku Digital Twin</div>
 
+      <!-- Mode toggle -->
       <div class="row">
         <div class="label">Simulation Mode</div>
         <div class="buttons">
@@ -29,6 +26,7 @@
 
       <div class="divider"></div>
 
+      <!-- Traffic scenario controls -->
       <div class="row">
         <div class="label">Traffic Scenario</div>
         <select id="timeOfDay" class="input-select">
@@ -65,6 +63,7 @@
 
       <div class="divider"></div>
 
+      <!-- Network stats -->
       <div class="row">
         <div class="label">Network Congestion</div>
         <div class="value" id="score">80%</div>
@@ -84,6 +83,7 @@
 
       <div class="divider"></div>
 
+      <!-- Road selection -->
       <div class="row">
         <div class="label">Select Roads for Bus Lanes (Click on map)</div>
         <div id="selectedRoadsList" class="roads-list"></div>
@@ -93,8 +93,13 @@
         ➕ Simulate Bus Lanes (0 roads)
       </button>
 
-      <div id="impactMetrics" style="display: none; margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(0,0,0,0.06);">
-        <div class="label" style="margin-bottom: 12px">Impact Analysis</div>
+      <button id="saveScenario" class="btn save" type="button" disabled>
+        💾 Save as Scenario
+      </button>
+
+      <!-- Single simulation impact -->
+      <div id="impactMetrics" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06);">
+        <div class="label" style="margin-bottom:12px;">Impact Analysis</div>
         <div class="metrics">
           <div class="metric-card">
             <div class="metric-value" id="impactImprovement">—</div>
@@ -105,35 +110,62 @@
             <div class="metric-label">Time Saved</div>
           </div>
         </div>
-        <div id="recommendationsList" style="margin-top: 12px;"></div>
+        <div id="recommendationsList" style="margin-top:12px;"></div>
       </div>
 
+      <div class="divider"></div>
+
+      <!-- Saved scenarios -->
+      <div class="row">
+        <div class="label">Saved Scenarios (<span id="scenarioCount">0</span>)</div>
+        <div id="savedScenariosList" class="roads-list"></div>
+      </div>
+
+      <button id="compareScenarios" class="btn compare" type="button" disabled>
+        ⚖️ Compare Scenarios (0)
+      </button>
+
+      <button id="clearScenarios" class="btn clear" type="button" style="display:none;">
+        🗑 Clear All Scenarios
+      </button>
+
+      <!-- Comparison results -->
+      <div id="comparisonPanel" style="display:none; margin-top:16px; padding-top:16px; border-top:1px solid rgba(0,0,0,0.06);">
+        <div class="label" style="margin-bottom:12px;">📊 Scenario Comparison</div>
+        <div id="comparisonResults"></div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Legend -->
       <div class="legend">
         <div class="legend-title">Road Congestion Legend</div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #22c55e;"></div>
-          <span>Free flow (0-50%)</span>
+          <div class="legend-color" style="background:#22c55e;"></div>
+          <span>Free flow (0–50%)</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #f59e0b;"></div>
-          <span>Moderate (50-75%)</span>
+          <div class="legend-color" style="background:#f59e0b;"></div>
+          <span>Moderate (50–75%)</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #ef4444;"></div>
-          <span>Heavy (75-100%)</span>
+          <div class="legend-color" style="background:#ef4444;"></div>
+          <span>Heavy (75–100%)</span>
         </div>
         <div class="legend-item">
-          <div class="legend-color" style="background: #2563eb;"></div>
+          <div class="legend-color" style="background:#2563eb;"></div>
           <span>Bus Lane (New)</span>
+        </div>
+        <div class="legend-item">
+          <div class="legend-color" style="background:#7c3aed;"></div>
+          <span>Best Scenario</span>
         </div>
       </div>
 
       <div class="divider"></div>
 
       <div class="row">
-        <div id="status" class="status">
-          Loading network data…
-        </div>
+        <div id="status" class="status">Loading network data…</div>
       </div>
     </div>
 

@@ -98,6 +98,42 @@ class NetworkStore:
         v = props.get("v")
         return RoadRef(edge_id=str(edge_id), u=str(u) if u is not None else None, v=str(v) if v is not None else None)
 
+    def bfs_distances(self, source_ids: set[str], max_depth: int = 6) -> dict[str, int]:
+        """BFS over the road graph starting from a set of source road IDs.
+
+        Returns a dict of road_id -> hop distance from the nearest source.
+        Roads not reachable within max_depth are omitted.
+        """
+        from collections import deque
+
+        visited: dict[str, int] = {}
+        queue: deque[tuple[str, int]] = deque()
+
+        for road_id in source_ids:
+            if road_id in self.roads:
+                visited[road_id] = 0
+                queue.append((road_id, 0))
+
+        while queue:
+            current_id, depth = queue.popleft()
+            if depth >= max_depth:
+                continue
+
+            ref = self.get_road_ref(current_id)
+            neighbor_road_ids: set[str] = set()
+
+            if ref.u is not None:
+                neighbor_road_ids.update(self.roads_by_node.get(ref.u, []))
+            if ref.v is not None:
+                neighbor_road_ids.update(self.roads_by_node.get(ref.v, []))
+
+            for neighbor_id in neighbor_road_ids:
+                if neighbor_id not in visited:
+                    visited[neighbor_id] = depth + 1
+                    queue.append((neighbor_id, depth + 1))
+
+        return visited
+
 
 def geometry_centroid_latlon(geometry: dict[str, Any] | None) -> tuple[float, float] | None:
     """Return centroid as (lat, lon) for LineString / MultiLineString."""

@@ -3,9 +3,11 @@
 from __future__ import annotations
 
 import math
-import zlib
 from dataclasses import dataclass
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from .network_store import NetworkStore
 
 
 @dataclass(frozen=True)
@@ -69,12 +71,19 @@ class TrafficProfile:
 class TrafficSimulator:
     """Simulate complex traffic impact of infrastructure changes."""
 
-    def __init__(self, baseline_congestion: dict[str, float]) -> None:
+    def __init__(
+        self,
+        baseline_congestion: dict[str, float],
+        network_store: "NetworkStore | None" = None,
+    ) -> None:
         """
         Args:
             baseline_congestion: Map of road_id -> congestion (0.0-1.0)
+            network_store: Optional NetworkStore for real graph-based BFS distances.
         """
         self.baseline = baseline_congestion.copy()
+        self._store = network_store
+        self._bfs_cache: dict[frozenset[str], dict[str, int]] = {}
 
     def simulate_bus_lanes(
         self,
@@ -209,11 +218,23 @@ class TrafficSimulator:
         return 0.5 * (1 - normalized_dist) ** 2 - 0.05
 
     def _distance_to_bus_lanes(self, road_id: str, bus_lane_ids: set[str]) -> int:
-        """Simplified distance (in "hops" of connected roads)."""
+        """Graph-hop distance from road_id to the nearest bus lane.
+
+        Uses BFS over the real road topology when a NetworkStore is available.
+        Falls back to a deterministic hash approximation otherwise.
+        """
         if road_id in bus_lane_ids:
             return 0
 
-        # Deterministic pseudo-distance based on (road_id, bus_lane_id) pairs.
+        if self._store is not None:
+            key = frozenset(bus_lane_ids)
+            if key not in self._bfs_cache:
+                self._bfs_cache[key] = self._store.bfs_distances(bus_lane_ids, max_depth=6)
+            distances = self._bfs_cache[key]
+            return distances.get(road_id, 99)
+
+        # Fallback: deterministic pseudo-distance (no graph available)
+        import zlib
         best = 99
         for lane_id in bus_lane_ids:
             h = zlib.adler32(f"{road_id}|{lane_id}".encode("utf-8")) % 100
@@ -231,7 +252,6 @@ class TrafficSimulator:
                 best = dist
                 if best == 1:
                     break
-
         return best if best != 99 else 5
 
     def _congestion_to_travel_time(self, congestion: float, road_length_km: float) -> float:
